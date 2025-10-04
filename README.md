@@ -92,6 +92,12 @@ aws-ssm <secret-id>
 
 # With specific region
 aws-ssm <secret-id> <region>
+
+# Show version information
+aws-ssm --version
+
+# Show help
+aws-ssm --help
 ```
 
 ## Command Line Examples
@@ -172,6 +178,21 @@ go build -o aws-ssm main.go
 GOOS=linux GOARCH=amd64 go build -o aws-ssm-linux-amd64 main.go
 GOOS=windows GOARCH=amd64 go build -o aws-ssm-windows-amd64.exe main.go
 GOOS=darwin GOARCH=arm64 go build -o aws-ssm-darwin-arm64 main.go
+```
+
+#### Windows Users
+
+For Windows development, use the provided PowerShell build script:
+
+```powershell
+# Build with version information
+.\build.ps1
+
+# Or build manually
+go build -o aws-ssm.exe main.go
+
+# Test the version
+.\aws-ssm.exe --version
 ```
 
 ### Testing

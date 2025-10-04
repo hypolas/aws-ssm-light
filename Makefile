@@ -1,5 +1,14 @@
 # Makefile for AWS SSM
 
+# Version information
+VERSION ?= $(shell git describe --tags --exact-match 2>/dev/null || echo "dev-$(shell git rev-parse --short HEAD)")
+GIT_COMMIT ?= $(shell git rev-parse HEAD)
+BUILD_TIME ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
+MAINTAINER ?= Nicolas HYPOLITE
+
+# Build flags
+LDFLAGS = -w -s -X main.Version=$(VERSION) -X main.GitCommit=$(GIT_COMMIT) -X main.BuildTime=$(BUILD_TIME) -X main.Maintainer="$(MAINTAINER)"
+
 .PHONY: help test test-race test-coverage build clean lint fmt vet install-tools benchmark
 
 # Default target
@@ -39,18 +48,18 @@ benchmark: ## Run benchmarks
 
 # Building
 build: ## Build the binary
-	go build -o aws-ssm main.go
+	go build -ldflags="$(LDFLAGS)" -o aws-ssm main.go
 
 build-all: ## Build for all platforms
-	GOOS=linux GOARCH=amd64 go build -o bin/aws-ssm-linux-amd64 main.go
-	GOOS=linux GOARCH=arm64 go build -o bin/aws-ssm-linux-arm64 main.go
-	GOOS=darwin GOARCH=amd64 go build -o bin/aws-ssm-darwin-amd64 main.go
-	GOOS=darwin GOARCH=arm64 go build -o bin/aws-ssm-darwin-arm64 main.go
-	GOOS=windows GOARCH=amd64 go build -o bin/aws-ssm-windows-amd64.exe main.go
-	GOOS=windows GOARCH=arm64 go build -o bin/aws-ssm-windows-arm64.exe main.go
+	GOOS=linux GOARCH=amd64 go build -ldflags="$(LDFLAGS)" -o bin/aws-ssm-linux-amd64 main.go
+	GOOS=linux GOARCH=arm64 go build -ldflags="$(LDFLAGS)" -o bin/aws-ssm-linux-arm64 main.go
+	GOOS=darwin GOARCH=amd64 go build -ldflags="$(LDFLAGS)" -o bin/aws-ssm-darwin-amd64 main.go
+	GOOS=darwin GOARCH=arm64 go build -ldflags="$(LDFLAGS)" -o bin/aws-ssm-darwin-arm64 main.go
+	GOOS=windows GOARCH=amd64 go build -ldflags="$(LDFLAGS)" -o bin/aws-ssm-windows-amd64.exe main.go
+	GOOS=windows GOARCH=arm64 go build -ldflags="$(LDFLAGS)" -o bin/aws-ssm-windows-arm64.exe main.go
 
 install: ## Install the binary to $GOPATH/bin
-	go install
+	go install -ldflags="$(LDFLAGS)"
 
 # Maintenance
 clean: ## Clean build artifacts

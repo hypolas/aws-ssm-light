@@ -6,9 +6,18 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
+)
+
+// Version information - set during build with -ldflags
+var (
+	Version    = "dev"
+	GitCommit  = "unknown"
+	BuildTime  = "unknown"
+	Maintainer = "Nicolas HYPOLITE"
 )
 
 // SecretsManagerClient interface for testing
@@ -28,10 +37,56 @@ type App struct {
 	Config Config
 }
 
+// ShowVersion displays version information
+func ShowVersion() {
+	fmt.Printf("aws-ssm version %s\n", Version)
+	if GitCommit != "unknown" {
+		fmt.Printf("Git commit: %s\n", GitCommit)
+	}
+	if BuildTime != "unknown" {
+		fmt.Printf("Built: %s\n", BuildTime)
+	}
+	if Maintainer != "" {
+		// Replace underscore with space for display
+		maintainerName := strings.ReplaceAll(Maintainer, "_", " ")
+		fmt.Printf("Maintainer: %s\n", maintainerName)
+	}
+}
+
+// ShowUsage displays usage information
+func ShowUsage(progName string) {
+	fmt.Fprintf(os.Stderr, "Usage: %s <secret-id> [region]\n", progName)
+	fmt.Fprintf(os.Stderr, "       %s --version\n", progName)
+	fmt.Fprintf(os.Stderr, "       %s --help\n", progName)
+	fmt.Fprintf(os.Stderr, "\nArguments:\n")
+	fmt.Fprintf(os.Stderr, "  secret-id    AWS Secrets Manager secret ID or ARN\n")
+	fmt.Fprintf(os.Stderr, "  region       AWS region (optional, overrides AWS_REGION)\n")
+	fmt.Fprintf(os.Stderr, "\nOptions:\n")
+	fmt.Fprintf(os.Stderr, "  --version    Show version information\n")
+	fmt.Fprintf(os.Stderr, "  --help       Show this help message\n")
+	fmt.Fprintf(os.Stderr, "\nEnvironment variables:\n")
+	fmt.Fprintf(os.Stderr, "  AWS_REGION: AWS region (can be overridden by second argument)\n")
+	fmt.Fprintf(os.Stderr, "  AWS_ACCESS_KEY_ID: AWS access key\n")
+	fmt.Fprintf(os.Stderr, "  AWS_SECRET_ACCESS_KEY: AWS secret key\n")
+	fmt.Fprintf(os.Stderr, "  AWS_SESSION_TOKEN: Session token (for temporary roles)\n")
+}
+
 // ParseArgs parses command line arguments and environment variables
 func ParseArgs(args []string) (Config, error) {
 	if len(args) < 2 {
-		return Config{}, fmt.Errorf("usage: %s <secret-id> [region]", args[0])
+		return Config{}, fmt.Errorf("insufficient arguments")
+	}
+
+	// Handle version flag
+	if args[1] == "--version" || args[1] == "-v" {
+		ShowVersion()
+		os.Exit(0)
+	}
+
+	// Handle help flag
+	if args[1] == "--help" || args[1] == "-h" {
+		ShowUsage(args[0])
+		os.Exit(0)
 	}
 
 	secretID := args[1]
@@ -104,11 +159,11 @@ func NewApp(cfg Config) (*App, error) {
 func main() {
 	cfg, err := ParseArgs(os.Args)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Environment variables:\n")
-		fmt.Fprintf(os.Stderr, "  AWS_REGION: AWS region (can be overridden by second argument)\n")
-		fmt.Fprintf(os.Stderr, "  AWS_ACCESS_KEY_ID: AWS access key\n")
-		fmt.Fprintf(os.Stderr, "  AWS_SECRET_ACCESS_KEY: AWS secret key\n")
+		if err.Error() == "insufficient arguments" {
+			ShowUsage(os.Args[0])
+		} else {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		}
 		os.Exit(1)
 	}
 

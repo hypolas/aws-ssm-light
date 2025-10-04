@@ -98,13 +98,30 @@ jobs:
     - name: Run tests
       run: go test -v ./...
 
+    - name: Set version variables
+      id: version
+      shell: bash
+      run: |
+        if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+          VERSION="${{ github.ref_name }}"
+        else
+          VERSION="dev-$(git rev-parse --short HEAD)"
+        fi
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "GIT_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+        echo "BUILD_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
+
     - name: Build binary
       env:
         GOOS: ${{ matrix.goos }}
         GOARCH: ${{ matrix.goarch }}
         CGO_ENABLED: 0
+      shell: bash
       run: |
-        go build -ldflags="-w -s" -o aws-ssm-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }} main.go
+        go build \
+          -ldflags="-w -s -X main.Version=${{ steps.version.outputs.VERSION }} -X main.GitCommit=${{ steps.version.outputs.GIT_COMMIT }} -X main.BuildTime=${{ steps.version.outputs.BUILD_TIME }} -X main.Maintainer='Nicolas HYPOLITE'" \
+          -o aws-ssm-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }} \
+          main.go
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4

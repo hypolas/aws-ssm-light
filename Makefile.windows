@@ -1,0 +1,34 @@
+# Makefile.windows - Windows compatible version
+
+# Version information
+!IF "$(VERSION)" == ""
+VERSION = dev-local
+!ENDIF
+
+!IF "$(GIT_COMMIT)" == ""
+GIT_COMMIT = unknown
+!ENDIF
+
+!IF "$(BUILD_TIME)" == ""
+BUILD_TIME = unknown
+!ENDIF
+
+# Build flags
+LDFLAGS = -w -s -X main.Version=$(VERSION) -X main.GitCommit=$(GIT_COMMIT) -X main.BuildTime=$(BUILD_TIME)
+
+build:
+	go build -ldflags="$(LDFLAGS)" -o aws-ssm.exe main.go
+
+build-with-version:
+	powershell -Command "$$version = if (git describe --tags --exact-match 2>$$null) { git describe --tags --exact-match } else { 'dev-' + (git rev-parse --short HEAD) }; $$commit = git rev-parse HEAD; $$time = Get-Date -Format 'yyyy-MM-ddTHH:mm:ssZ' -AsUTC; go build -ldflags=`\"-w -s -X main.Version=$$version -X main.GitCommit=$$commit -X main.BuildTime=$$time`\" -o aws-ssm.exe main.go"
+
+test:
+	go test -v ./...
+
+test-short:
+	go test -short -v ./...
+
+clean:
+	del aws-ssm.exe 2>nul || exit 0
+	del coverage.out 2>nul || exit 0
+	del coverage.html 2>nul || exit 0

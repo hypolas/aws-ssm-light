@@ -249,3 +249,36 @@ func TestApp_GetSecret_Integration(t *testing.T) {
 func stringPtr(s string) *string {
 	return &s
 }
+
+func TestShowVersion(t *testing.T) {
+	// Save original values
+	origVersion := Version
+	origGitCommit := GitCommit
+	origBuildTime := BuildTime
+
+	// Set test values
+	Version = "v1.0.0"
+	GitCommit = "abc123"
+	BuildTime = "2023-01-01T12:00:00Z"
+
+	// Restore original values after test
+	defer func() {
+		Version = origVersion
+		GitCommit = origGitCommit
+		BuildTime = origBuildTime
+	}()
+
+	// Test version output (we can't easily capture stdout in a unit test,
+	// but we can at least ensure the function doesn't panic)
+	assert.NotPanics(t, func() {
+		ShowVersion()
+	})
+}
+
+func TestShowUsage(t *testing.T) {
+	// Test usage output (we can't easily capture stderr in a unit test,
+	// but we can at least ensure the function doesn't panic)
+	assert.NotPanics(t, func() {
+		ShowUsage("aws-ssm")
+	})
+}
