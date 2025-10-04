@@ -63,7 +63,7 @@ jobs:
         go build -ldflags="-w -s" -o aws-ssm-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }} main.go
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: aws-ssm-${{ matrix.goos }}-${{ matrix.goarch }}
         path: aws-ssm-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }}
@@ -81,7 +81,7 @@ jobs:
         fetch-depth: 0
 
     - name: Download all artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
 
     - name: Generate changelog
       id: changelog

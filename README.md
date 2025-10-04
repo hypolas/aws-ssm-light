@@ -1,8 +1,8 @@
 # AWS SSM
 
-[![Build and Release](https://github.com/USERNAME/REPO/actions/workflows/build.yml/badge.svg)](https://github.com/USERNAME/REPO/actions/workflows/build.yml)
-[![Renovate](https://github.com/USERNAME/REPO/actions/workflows/renovate.yml/badge.svg)](https://github.com/USERNAME/REPO/actions/workflows/renovate.yml)
-[![Latest Release](https://img.shields.io/github/v/release/USERNAME/REPO)](https://github.com/USERNAME/REPO/releases/latest)
+[![Build and Release](https://github.com/hypolas/aws-ssm-light/actions/workflows/build.yml/badge.svg)](https://github.com/hypolas/aws-ssm-light/actions/workflows/build.yml)
+[![Renovate](https://github.com/hypolas/aws-ssm-light/actions/workflows/renovate.yml/badge.svg)](https://github.com/hypolas/aws-ssm-light/actions/workflows/renovate.yml)
+[![Latest Release](https://img.shields.io/github/v/release/hypolas/aws-ssm-light)](https://github.com/hypolas/aws-ssm-light/releases/latest)
 
 A lightweight Go program that replaces `aws secretsmanager get-secret-value` to retrieve secrets from AWS Secrets Manager.
 
@@ -22,34 +22,34 @@ A lightweight Go program that replaces `aws secretsmanager get-secret-value` to 
 
 #### Linux (AMD64)
 ```bash
-curl -L https://github.com/USERNAME/REPO/releases/latest/download/aws-ssm-linux-amd64 -o aws-ssm && \
+curl -L https://github.com/hypolas/aws-ssm-light/releases/latest/download/aws-ssm-linux-amd64 -o aws-ssm && \
 chmod +x aws-ssm && \
 sudo mv aws-ssm /usr/local/bin/
 ```
 
 #### macOS (Apple Silicon)
 ```bash
-curl -L https://github.com/USERNAME/REPO/releases/latest/download/aws-ssm-darwin-arm64 -o aws-ssm && \
+curl -L https://github.com/hypolas/aws-ssm-light/releases/latest/download/aws-ssm-darwin-arm64 -o aws-ssm && \
 chmod +x aws-ssm && \
 sudo mv aws-ssm /usr/local/bin/
 ```
 
 #### macOS (Intel)
 ```bash
-curl -L https://github.com/USERNAME/REPO/releases/latest/download/aws-ssm-darwin-amd64 -o aws-ssm && \
+curl -L https://github.com/hypolas/aws-ssm-light/releases/latest/download/aws-ssm-darwin-amd64 -o aws-ssm && \
 chmod +x aws-ssm && \
 sudo mv aws-ssm /usr/local/bin/
 ```
 
 #### Windows (PowerShell)
 ```powershell
-Invoke-WebRequest -Uri "https://github.com/USERNAME/REPO/releases/latest/download/aws-ssm-windows-amd64.exe" -OutFile "aws-ssm.exe"
+Invoke-WebRequest -Uri "https://github.com/hypolas/aws-ssm-light/releases/latest/download/aws-ssm-windows-amd64.exe" -OutFile "aws-ssm.exe"
 # Move to a directory in your PATH
 ```
 
 ### Manual Download
 
-Download the appropriate binary for your platform from the [releases page](https://github.com/USERNAME/REPO/releases/latest):
+Download the appropriate binary for your platform from the [releases page](https://github.com/hypolas/aws-ssm-light/releases/latest):
 
 - **Windows (Intel/AMD)**: `aws-ssm-windows-amd64.exe`
 - **Windows (ARM)**: `aws-ssm-windows-arm64.exe`
@@ -112,7 +112,7 @@ aws-ssm "dev-database-url" "eu-central-1"
 
 ```bash
 # Clone the repository
-git clone https://github.com/USERNAME/REPO.git
+git clone https://github.com/hypolas/aws-ssm-light.git
 cd aws-ssm
 
 # Build for your platform
@@ -187,7 +187,7 @@ The binary will be copied into the Azure DevOps Agent container to replace calls
 FROM ubuntu:latest
 
 # Download and install aws-ssm
-RUN curl -L https://github.com/USERNAME/REPO/releases/latest/download/aws-ssm-linux-amd64 -o /usr/local/bin/aws-ssm && \
+RUN curl -L https://github.com/hypolas/aws-ssm-light/releases/latest/download/aws-ssm-linux-amd64 -o /usr/local/bin/aws-ssm && \
     chmod +x /usr/local/bin/aws-ssm
 
 # Use in your scripts instead of AWS CLI
@@ -202,8 +202,8 @@ Each release includes SHA256 checksums. To verify your download:
 
 ```bash
 # Download the binary and checksum
-curl -L https://github.com/USERNAME/REPO/releases/latest/download/aws-ssm-linux-amd64 -o aws-ssm
-curl -L https://github.com/USERNAME/REPO/releases/latest/download/aws-ssm-linux-amd64.sha256 -o aws-ssm.sha256
+curl -L https://github.com/hypolas/aws-ssm-light/releases/latest/download/aws-ssm-linux-amd64 -o aws-ssm
+curl -L https://github.com/hypolas/aws-ssm-light/releases/latest/download/aws-ssm-linux-amd64.sha256 -o aws-ssm.sha256
 
 # Verify the checksum
 sha256sum -c aws-ssm.sha256
@@ -232,7 +232,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- 📖 [Documentation](https://github.com/USERNAME/REPO/wiki)
-- 🐛 [Report Issues](https://github.com/USERNAME/REPO/issues)
-- 💬 [Discussions](https://github.com/USERNAME/REPO/discussions)
+- 📖 [Documentation](https://github.com/hypolas/aws-ssm-light/wiki)
+- 🐛 [Report Issues](https://github.com/hypolas/aws-ssm-light/issues)
+- 💬 [Discussions](https://github.com/hypolas/aws-ssm-light/discussions)
 - 📋 [Changelog](CHANGELOG.md)
