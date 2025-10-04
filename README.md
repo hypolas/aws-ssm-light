@@ -124,6 +124,74 @@ GOOS=windows GOARCH=amd64 go build -o aws-ssm-windows-amd64.exe main.go
 GOOS=darwin GOARCH=arm64 go build -o aws-ssm-darwin-arm64 main.go
 ```
 
+## Development
+
+### Prerequisites
+
+- Go 1.21 or later
+- AWS credentials configured
+- Git
+
+### Building from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/hypolas/aws-ssm-light.git
+cd aws-ssm
+
+# Build for your platform
+go build -o aws-ssm main.go
+
+# Build for specific platforms
+GOOS=linux GOARCH=amd64 go build -o aws-ssm-linux-amd64 main.go
+GOOS=windows GOARCH=amd64 go build -o aws-ssm-windows-amd64.exe main.go
+GOOS=darwin GOARCH=arm64 go build -o aws-ssm-darwin-arm64 main.go
+```
+
+### Testing
+
+The project includes comprehensive unit and integration tests:
+
+```bash
+# Run all tests
+go test -v ./...
+
+# Run only unit tests (skip integration tests)
+go test -short -v ./...
+
+# Run tests with coverage
+go test -coverprofile=coverage.out .
+go tool cover -html=coverage.out -o coverage.html
+
+# Run with race detection
+go test -race -short ./...
+
+# Using Makefile (recommended)
+make test           # Run all tests
+make test-short     # Run unit tests only
+make test-coverage  # Generate coverage report
+make benchmark      # Run performance benchmarks
+```
+
+#### Test Coverage
+- **Current Coverage**: ~49% (focused on business logic)
+- **Target**: >90% for critical functions
+- **Test Types**: Unit tests, integration tests, benchmarks
+
+#### Running Integration Tests
+Integration tests require AWS credentials:
+
+```bash
+# Set up test environment
+export AWS_INTEGRATION_TEST_REGION="us-east-1"
+export AWS_INTEGRATION_TEST_SECRET="your-test-secret-name"
+
+# Run integration tests
+make test-integration
+```
+
+See [TESTING.md](TESTING.md) for detailed testing information.
+
 ### Running Tests
 
 ```bash
