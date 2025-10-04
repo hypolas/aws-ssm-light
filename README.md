@@ -171,12 +171,36 @@ make test           # Run all tests
 make test-short     # Run unit tests only
 make test-coverage  # Generate coverage report
 make benchmark      # Run performance benchmarks
+make security       # Run security analysis
 ```
+
+#### Security Testing
+
+The project includes automated security scanning using gosec:
+
+```bash
+# Install security tools
+make install-tools
+
+# Run security analysis
+make security
+
+# Or run gosec directly
+gosec ./...
+```
+
+Security checks include:
+- ✅ **SQL injection** detection
+- ✅ **Hardcoded credentials** detection
+- ✅ **File traversal** vulnerabilities
+- ✅ **Command injection** risks
+- ✅ **TLS/crypto** best practices
+- ✅ **Unsafe operations** detection
 
 #### Test Coverage
 - **Current Coverage**: ~49% (focused on business logic)
 - **Target**: >90% for critical functions
-- **Test Types**: Unit tests, integration tests, benchmarks
+- **Test Types**: Unit tests, integration tests, benchmarks, security scans
 
 #### Running Integration Tests
 Integration tests require AWS credentials:
@@ -203,9 +227,20 @@ go test -v ./...
 This project uses GitHub Actions for automated building, testing, and releasing:
 
 - **🔄 Automated Builds**: Multi-platform binaries built on every push
-- **📦 Automatic Releases**: Version bumping based on conventional commits
-- **🔒 Security**: SHA256 checksums for all releases
+- **🧪 Comprehensive Testing**: Unit, integration, and benchmark tests
+- **� Security Scanning**: Automated vulnerability detection with gosec
+- **📊 Code Quality**: Linting with golangci-lint and coverage reporting
+- **�📦 Automatic Releases**: Version bumping based on conventional commits
+- **� Binary Security**: SHA256 checksums for all releases
 - **🔧 Dependency Management**: Renovate bot for automatic dependency updates
+
+### Security Features
+
+- **Gosec Integration**: Scans for common Go security issues
+- **Multi-platform Testing**: Ensures security across Windows, Linux, macOS
+- **Dependency Scanning**: Renovate monitors for security updates
+- **Code Quality Gates**: All tests must pass before merge
+- **Binary Verification**: SHA256 checksums prevent tampering
 
 ### Release Process
 

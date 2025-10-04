@@ -53,8 +53,8 @@ func TestParseArgs(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "region from args overrides env",
-			args: []string{"aws-ssm", "my-secret", "eu-west-1"},
+			name:    "region from args overrides env",
+			args:    []string{"aws-ssm", "my-secret", "eu-west-1"},
 			envVars: map[string]string{"AWS_REGION": "us-east-1"},
 			expected: Config{
 				SecretID: "my-secret",
@@ -195,7 +195,7 @@ func TestApp_GetSecret(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			mockClient := new(MockSecretsManagerClient)
-			
+
 			if tt.mockError != nil {
 				mockClient.On("GetSecretValue", mock.Anything, mock.MatchedBy(func(input *secretsmanager.GetSecretValueInput) bool {
 					return *input.SecretId == tt.secretID
