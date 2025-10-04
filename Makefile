@@ -66,7 +66,9 @@ deps: ## Download dependencies
 # Tools
 install-tools: ## Install development tools
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-	go install github.com/securecodewarrior/gosec/v2/cmd/gosec@latest
+	@echo "Installing gosec..."
+	@curl -sfL https://raw.githubusercontent.com/securecodewarrior/gosec/master/install.sh | sh -s -- -b $$(go env GOPATH)/bin latest || \
+	go install github.com/securecodewarrior/gosec/cmd/gosec@latest
 
 security: install-tools ## Run security analysis
 	gosec ./...
