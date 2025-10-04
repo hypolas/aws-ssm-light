@@ -41,7 +41,7 @@ This binary was specifically created to **avoid the complete and heavy installat
 - ✅ Compatible with standard AWS credentials (environment variables, IAM roles, etc.)
 - ✅ Lighter than AWS CLI (binary ~10MB vs ~100MB+)
 - ✅ Output compatible with `--query SecretString --output text`
-- ✅ Multi-platform support (Windows, Linux, macOS on AMD64 and ARM64)
+- ✅ Multi-platform support (Windows, Linux, macOS on AMD64, ARM64, and ARMv7)
 - ✅ Automatic releases with checksums for security verification
 - ✅ Cross-region secret access support
 
@@ -96,6 +96,20 @@ chmod +x aws-ssm && \
 sudo mv aws-ssm /usr/local/bin/
 ```
 
+#### Linux ARM64
+```bash
+curl -L https://github.com/hypolas/aws-ssm-light/releases/latest/download/aws-ssm-linux-arm64 -o aws-ssm && \
+chmod +x aws-ssm && \
+sudo mv aws-ssm /usr/local/bin/
+```
+
+#### Linux ARMv7 (Raspberry Pi)
+```bash
+curl -L https://github.com/hypolas/aws-ssm-light/releases/latest/download/aws-ssm-linux-arm -o aws-ssm && \
+chmod +x aws-ssm && \
+sudo mv aws-ssm /usr/local/bin/
+```
+
 #### Windows (PowerShell)
 ```powershell
 Invoke-WebRequest -Uri "https://github.com/hypolas/aws-ssm-light/releases/latest/download/aws-ssm-windows-amd64.exe" -OutFile "aws-ssm.exe"
@@ -109,7 +123,8 @@ Download the appropriate binary for your platform from the [releases page](https
 - **Windows (Intel/AMD)**: `aws-ssm-windows-amd64.exe`
 - **Windows (ARM)**: `aws-ssm-windows-arm64.exe`
 - **Linux (Intel/AMD)**: `aws-ssm-linux-amd64`
-- **Linux (ARM)**: `aws-ssm-linux-arm64`
+- **Linux (ARM64)**: `aws-ssm-linux-arm64`
+- **Linux (ARMv7)**: `aws-ssm-linux-arm` (Raspberry Pi, etc.)
 - **macOS (Intel)**: `aws-ssm-darwin-amd64`
 - **macOS (Apple Silicon)**: `aws-ssm-darwin-arm64`
 

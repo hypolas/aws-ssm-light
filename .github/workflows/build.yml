@@ -69,6 +69,9 @@ jobs:
           - goos: linux
             goarch: arm64
             extension: ""
+          - goos: linux
+            goarch: arm
+            extension: ""
           - goos: windows
             goarch: arm64
             extension: .exe
@@ -163,6 +166,7 @@ jobs:
         cd ../aws-ssm-linux-amd64 && sha256sum aws-ssm-linux-amd64 > aws-ssm-linux-amd64.sha256
         cd ../aws-ssm-darwin-amd64 && sha256sum aws-ssm-darwin-amd64 > aws-ssm-darwin-amd64.sha256
         cd ../aws-ssm-linux-arm64 && sha256sum aws-ssm-linux-arm64 > aws-ssm-linux-arm64.sha256
+        cd ../aws-ssm-linux-arm && sha256sum aws-ssm-linux-arm > aws-ssm-linux-arm.sha256
         cd ../aws-ssm-windows-arm64 && sha256sum aws-ssm-windows-arm64.exe > aws-ssm-windows-arm64.exe.sha256
         cd ../aws-ssm-darwin-arm64 && sha256sum aws-ssm-darwin-arm64 > aws-ssm-darwin-arm64.sha256
 
@@ -179,7 +183,8 @@ jobs:
         - **Windows (Intel/AMD)**: `aws-ssm-windows-amd64.exe`
         - **Windows (ARM)**: `aws-ssm-windows-arm64.exe`
         - **Linux (Intel/AMD)**: `aws-ssm-linux-amd64`
-        - **Linux (ARM)**: `aws-ssm-linux-arm64`
+        - **Linux (ARM64)**: `aws-ssm-linux-arm64`
+        - **Linux (ARMv7)**: `aws-ssm-linux-arm`
         - **macOS (Intel)**: `aws-ssm-darwin-amd64`
         - **macOS (Apple Silicon)**: `aws-ssm-darwin-arm64`
         
@@ -210,6 +215,7 @@ jobs:
         $(cat aws-ssm-linux-amd64/aws-ssm-linux-amd64.sha256)
         $(cat aws-ssm-darwin-amd64/aws-ssm-darwin-amd64.sha256)
         $(cat aws-ssm-linux-arm64/aws-ssm-linux-arm64.sha256)
+        $(cat aws-ssm-linux-arm/aws-ssm-linux-arm.sha256)
         $(cat aws-ssm-windows-arm64/aws-ssm-windows-arm64.exe.sha256)
         $(cat aws-ssm-darwin-arm64/aws-ssm-darwin-arm64.sha256)
         ```
@@ -234,6 +240,8 @@ jobs:
           aws-ssm-darwin-amd64/aws-ssm-darwin-amd64.sha256
           aws-ssm-linux-arm64/aws-ssm-linux-arm64
           aws-ssm-linux-arm64/aws-ssm-linux-arm64.sha256
+          aws-ssm-linux-arm/aws-ssm-linux-arm
+          aws-ssm-linux-arm/aws-ssm-linux-arm.sha256
           aws-ssm-windows-arm64/aws-ssm-windows-arm64.exe
           aws-ssm-windows-arm64/aws-ssm-windows-arm64.exe.sha256
           aws-ssm-darwin-arm64/aws-ssm-darwin-arm64
