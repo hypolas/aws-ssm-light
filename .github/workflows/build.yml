@@ -119,7 +119,7 @@ jobs:
       shell: bash
       run: |
         go build \
-          -ldflags="-w -s -X main.Version=${{ steps.version.outputs.VERSION }} -X main.GitCommit=${{ steps.version.outputs.GIT_COMMIT }} -X main.BuildTime=${{ steps.version.outputs.BUILD_TIME }} -X main.Maintainer='Nicolas HYPOLITE'" \
+          -ldflags="-w -s -X main.Version=${{ steps.version.outputs.VERSION }} -X main.GitCommit=${{ steps.version.outputs.GIT_COMMIT }} -X main.BuildTime=${{ steps.version.outputs.BUILD_TIME }} -X main.Maintainer=Nicolas_HYPOLITE" \
           -o aws-ssm-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }} \
           main.go
 

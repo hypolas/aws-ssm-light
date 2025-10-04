@@ -4,10 +4,10 @@
 VERSION ?= $(shell git describe --tags --exact-match 2>/dev/null || echo "dev-$(shell git rev-parse --short HEAD)")
 GIT_COMMIT ?= $(shell git rev-parse HEAD)
 BUILD_TIME ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
-MAINTAINER ?= Nicolas HYPOLITE
+MAINTAINER ?= Nicolas_HYPOLITE
 
 # Build flags
-LDFLAGS = -w -s -X main.Version=$(VERSION) -X main.GitCommit=$(GIT_COMMIT) -X main.BuildTime=$(BUILD_TIME) -X main.Maintainer="$(MAINTAINER)"
+LDFLAGS = -w -s -X main.Version=$(VERSION) -X main.GitCommit=$(GIT_COMMIT) -X main.BuildTime=$(BUILD_TIME) -X main.Maintainer=$(MAINTAINER)
 
 .PHONY: help test test-race test-coverage build clean lint fmt vet install-tools benchmark
 
