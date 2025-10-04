@@ -71,6 +71,7 @@ jobs:
             extension: ""
           - goos: linux
             goarch: arm
+            goarm: "7"
             extension: ""
           - goos: windows
             goarch: arm64
@@ -118,6 +119,7 @@ jobs:
       env:
         GOOS: ${{ matrix.goos }}
         GOARCH: ${{ matrix.goarch }}
+        GOARM: ${{ matrix.goarm }}
         CGO_ENABLED: 0
       shell: bash
       run: |
