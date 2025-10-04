@@ -1,0 +1,26 @@
+mode: set
+light_ssm/main.go:32.47,33.19 1 1
+light_ssm/main.go:33.19,35.3 1 1
+light_ssm/main.go:37.2,41.19 3 1
+light_ssm/main.go:41.19,43.3 1 1
+light_ssm/main.go:45.2,45.18 1 1
+light_ssm/main.go:45.18,47.3 1 1
+light_ssm/main.go:49.2,52.8 1 1
+light_ssm/main.go:56.64,62.16 3 1
+light_ssm/main.go:62.16,64.3 1 1
+light_ssm/main.go:66.2,66.32 1 1
+light_ssm/main.go:66.32,68.3 1 1
+light_ssm/main.go:70.2,70.34 1 1
+light_ssm/main.go:74.46,77.71 2 1
+light_ssm/main.go:77.71,80.3 1 1
+light_ssm/main.go:82.2,82.20 1 1
+light_ssm/main.go:86.39,91.16 2 0
+light_ssm/main.go:91.16,93.3 1 0
+light_ssm/main.go:96.2,101.8 2 0
+light_ssm/main.go:104.13,106.16 2 0
+light_ssm/main.go:106.16,113.3 6 0
+light_ssm/main.go:115.2,116.16 2 0
+light_ssm/main.go:116.16,118.3 1 0
+light_ssm/main.go:120.2,121.16 2 0
+light_ssm/main.go:121.16,123.3 1 0
+light_ssm/main.go:125.2,126.19 2 0
