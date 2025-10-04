@@ -1,0 +1,58 @@
+name: Update Documentation
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Update README with latest release info
+      run: |
+        LATEST_VERSION=$(echo ${{ github.event.release.tag_name }})
+        
+        # Update installation commands in README
+        sed -i "s|releases/download/v[0-9]\+\.[0-9]\+\.[0-9]\+/|releases/download/${LATEST_VERSION}/|g" README.md
+        sed -i "s|releases/latest/download/|releases/download/${LATEST_VERSION}/|g" README.md
+
+    - name: Update CHANGELOG
+      run: |
+        # Get release notes and add to CHANGELOG
+        echo "Updating CHANGELOG.md with release ${{ github.event.release.tag_name }}"
+        
+        # Create temp file with new entry
+        cat > temp_changelog.md << EOF
+        # Changelog
+        
+        All notable changes to this project will be documented in this file.
+        
+        The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+        and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+        
+        ## [Unreleased]
+        
+        ## [${{ github.event.release.tag_name }}] - $(date +%Y-%m-%d)
+        
+        ${{ github.event.release.body }}
+        
+        EOF
+        
+        # Append rest of changelog (skip first few lines)
+        tail -n +8 CHANGELOG.md >> temp_changelog.md
+        mv temp_changelog.md CHANGELOG.md
+
+    - name: Commit documentation updates
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add README.md CHANGELOG.md
+        git commit -m "docs: update documentation for release ${{ github.event.release.tag_name }}" || exit 0
+        git push

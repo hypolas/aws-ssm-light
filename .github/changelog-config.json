@@ -1,0 +1,87 @@
+{
+  "categories": [
+    {
+      "title": "## 🚀 Features",
+      "labels": ["feature", "enhancement", "feat"]
+    },
+    {
+      "title": "## 🐛 Bug Fixes", 
+      "labels": ["bug", "bugfix", "fix"]
+    },
+    {
+      "title": "## 📖 Documentation",
+      "labels": ["documentation", "docs"]
+    },
+    {
+      "title": "## 🔧 Maintenance",
+      "labels": ["maintenance", "chore", "deps", "dependencies"]
+    },
+    {
+      "title": "## ⚡ Performance",
+      "labels": ["performance", "perf"]
+    },
+    {
+      "title": "## 🔒 Security",
+      "labels": ["security"]
+    }
+  ],
+  "ignore_labels": [
+    "ignore-for-release"
+  ],
+  "sort": "ASC",
+  "template": "${{CHANGELOG}}",
+  "pr_template": "- ${{TITLE}} by @${{AUTHOR}} in #${{NUMBER}}",
+  "empty_template": "- No changes",
+  "label_extractor": [
+    {
+      "pattern": "^(feat|feature)(\\(.+\\))?!?:",
+      "target": "feature"
+    },
+    {
+      "pattern": "^(fix|bugfix)(\\(.+\\))?!?:",
+      "target": "bug"
+    },
+    {
+      "pattern": "^(docs|doc)(\\(.+\\))?!?:",
+      "target": "documentation"
+    },
+    {
+      "pattern": "^(chore|maintenance)(\\(.+\\))?!?:",
+      "target": "maintenance"
+    },
+    {
+      "pattern": "^(perf|performance)(\\(.+\\))?!?:",
+      "target": "performance"
+    },
+    {
+      "pattern": "^(security|sec)(\\(.+\\))?!?:",
+      "target": "security"
+    }
+  ],
+  "transformers": [
+    {
+      "pattern": "^(feat|feature)(\\(.+\\))?!?:\\s*(.+)",
+      "target": "$3"
+    },
+    {
+      "pattern": "^(fix|bugfix)(\\(.+\\))?!?:\\s*(.+)",
+      "target": "$3"
+    },
+    {
+      "pattern": "^(docs|doc)(\\(.+\\))?!?:\\s*(.+)",
+      "target": "$3"
+    },
+    {
+      "pattern": "^(chore|maintenance)(\\(.+\\))?!?:\\s*(.+)",
+      "target": "$3"
+    },
+    {
+      "pattern": "^(perf|performance)(\\(.+\\))?!?:\\s*(.+)",
+      "target": "$3"
+    },
+    {
+      "pattern": "^(security|sec)(\\(.+\\))?!?:\\s*(.+)",
+      "target": "$3"
+    }
+  ]
+}

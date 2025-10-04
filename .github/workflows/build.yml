@@ -1,0 +1,184 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - goos: windows
+            goarch: amd64
+            extension: .exe
+          - goos: linux
+            goarch: amd64
+            extension: ""
+          - goos: darwin
+            goarch: amd64
+            extension: ""
+          - goos: linux
+            goarch: arm64
+            extension: ""
+          - goos: windows
+            goarch: arm64
+            extension: .exe
+          - goos: darwin
+            goarch: arm64
+            extension: ""
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
+    - name: Download dependencies
+      run: go mod download
+
+    - name: Run tests
+      run: go test -v ./...
+
+    - name: Build binary
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+        CGO_ENABLED: 0
+      run: |
+        go build -ldflags="-w -s" -o aws-ssm-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }} main.go
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: aws-ssm-${{ matrix.goos }}-${{ matrix.goarch }}
+        path: aws-ssm-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.extension }}
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+
+    - name: Generate changelog
+      id: changelog
+      uses: mikepenz/release-changelog-builder-action@v4
+      with:
+        configuration: ".github/changelog-config.json"
+        ignorePreReleases: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Get version from tag
+      id: version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+    - name: Create checksums
+      run: |
+        cd aws-ssm-windows-amd64 && sha256sum aws-ssm-windows-amd64.exe > aws-ssm-windows-amd64.exe.sha256
+        cd ../aws-ssm-linux-amd64 && sha256sum aws-ssm-linux-amd64 > aws-ssm-linux-amd64.sha256
+        cd ../aws-ssm-darwin-amd64 && sha256sum aws-ssm-darwin-amd64 > aws-ssm-darwin-amd64.sha256
+        cd ../aws-ssm-linux-arm64 && sha256sum aws-ssm-linux-arm64 > aws-ssm-linux-arm64.sha256
+        cd ../aws-ssm-windows-arm64 && sha256sum aws-ssm-windows-arm64.exe > aws-ssm-windows-arm64.exe.sha256
+        cd ../aws-ssm-darwin-arm64 && sha256sum aws-ssm-darwin-arm64 > aws-ssm-darwin-arm64.sha256
+
+    - name: Create release documentation
+      run: |
+        cat > release-notes.md << 'EOF'
+        # AWS SSM ${{ steps.version.outputs.VERSION }}
+        
+        ## 📦 Installation
+        
+        ### Download binaries
+        Choose the appropriate binary for your platform:
+        
+        - **Windows (Intel/AMD)**: `aws-ssm-windows-amd64.exe`
+        - **Windows (ARM)**: `aws-ssm-windows-arm64.exe`
+        - **Linux (Intel/AMD)**: `aws-ssm-linux-amd64`
+        - **Linux (ARM)**: `aws-ssm-linux-arm64`
+        - **macOS (Intel)**: `aws-ssm-darwin-amd64`
+        - **macOS (Apple Silicon)**: `aws-ssm-darwin-arm64`
+        
+        ### Quick install (Linux/macOS)
+        ```bash
+        # For Linux AMD64
+        curl -L https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.VERSION }}/aws-ssm-linux-amd64 -o aws-ssm
+        chmod +x aws-ssm
+        sudo mv aws-ssm /usr/local/bin/
+        
+        # For macOS ARM64 (Apple Silicon)
+        curl -L https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.VERSION }}/aws-ssm-darwin-arm64 -o aws-ssm
+        chmod +x aws-ssm
+        sudo mv aws-ssm /usr/local/bin/
+        ```
+        
+        ### Verify installation
+        ```bash
+        aws-ssm --version
+        ```
+        
+        ## 🔍 Checksums
+        
+        Use these checksums to verify the integrity of downloaded files:
+        
+        ```
+        $(cat aws-ssm-windows-amd64/aws-ssm-windows-amd64.exe.sha256)
+        $(cat aws-ssm-linux-amd64/aws-ssm-linux-amd64.sha256)
+        $(cat aws-ssm-darwin-amd64/aws-ssm-darwin-amd64.sha256)
+        $(cat aws-ssm-linux-arm64/aws-ssm-linux-arm64.sha256)
+        $(cat aws-ssm-windows-arm64/aws-ssm-windows-arm64.exe.sha256)
+        $(cat aws-ssm-darwin-arm64/aws-ssm-darwin-arm64.sha256)
+        ```
+        
+        ## 📋 What's Changed
+        
+        ${{ steps.changelog.outputs.changelog }}
+        
+        **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.changelog.outputs.fromTag }}...${{ steps.version.outputs.VERSION }}
+        EOF
+
+    - name: Create release
+      uses: softprops/action-gh-release@v1
+      with:
+        body_path: release-notes.md
+        files: |
+          aws-ssm-windows-amd64/aws-ssm-windows-amd64.exe
+          aws-ssm-windows-amd64/aws-ssm-windows-amd64.exe.sha256
+          aws-ssm-linux-amd64/aws-ssm-linux-amd64
+          aws-ssm-linux-amd64/aws-ssm-linux-amd64.sha256
+          aws-ssm-darwin-amd64/aws-ssm-darwin-amd64
+          aws-ssm-darwin-amd64/aws-ssm-darwin-amd64.sha256
+          aws-ssm-linux-arm64/aws-ssm-linux-arm64
+          aws-ssm-linux-arm64/aws-ssm-linux-arm64.sha256
+          aws-ssm-windows-arm64/aws-ssm-windows-arm64.exe
+          aws-ssm-windows-arm64/aws-ssm-windows-arm64.exe.sha256
+          aws-ssm-darwin-arm64/aws-ssm-darwin-arm64
+          aws-ssm-darwin-arm64/aws-ssm-darwin-arm64.sha256
+        draft: false
+        prerelease: false
+        make_latest: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
