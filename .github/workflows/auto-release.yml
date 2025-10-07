@@ -76,15 +76,15 @@ jobs:
         ### Installation Methods
         
         #### Option 1: Direct Download
-        Download the binary for your platform from the [releases page](https://github.com/hypolas/aws-ssm-light/releases/latest).
+        Download the binary for your platform from the [releases page](https://github.com/hypolas/aws-ssm-lite/releases/latest).
         
         #### Option 2: One-liner install (Linux/macOS)
         ```bash
         # Linux AMD64
-        curl -L https://github.com/hypolas/aws-ssm-light/releases/latest/download/aws-ssm-linux-amd64 -o aws-ssm && chmod +x aws-ssm && sudo mv aws-ssm /usr/local/bin/
+        curl -L https://github.com/hypolas/aws-ssm-lite/releases/latest/download/aws-ssm-linux-amd64 -o aws-ssm && chmod +x aws-ssm && sudo mv aws-ssm /usr/local/bin/
         
         # macOS (Apple Silicon)
-        curl -L https://github.com/hypolas/aws-ssm-light/releases/latest/download/aws-ssm-darwin-arm64 -o aws-ssm && chmod +x aws-ssm && sudo mv aws-ssm /usr/local/bin/
+        curl -L https://github.com/hypolas/aws-ssm-lite/releases/latest/download/aws-ssm-darwin-arm64 -o aws-ssm && chmod +x aws-ssm && sudo mv aws-ssm /usr/local/bin/
         ```
         
         ### Usage Examples
@@ -112,7 +112,7 @@ jobs:
         
         ---
         
-        For issues or feature requests, please visit our [GitHub repository](https://github.com/hypolas/aws-ssm-light).
+        For issues or feature requests, please visit our [GitHub repository](https://github.com/hypolas/aws-ssm-lite).
         EOF
         
         echo "RELEASE_TEMPLATE<<EOF" >> $GITHUB_ENV
