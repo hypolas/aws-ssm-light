@@ -82,13 +82,21 @@ func TestParseArgs(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Set environment variables
 			for key, value := range tt.envVars {
-				os.Setenv(key, value)
-				defer os.Unsetenv(key)
+				if err := os.Setenv(key, value); err != nil {
+					t.Fatalf("Failed to set env var %s: %v", key, err)
+				}
+				defer func() {
+					if err := os.Unsetenv(key); err != nil {
+						t.Fatalf("Failed to unset env var %s: %v", key, err)
+					}
+				}()
 			}
 
 			// Clear AWS_REGION if not in envVars to ensure clean test
 			if _, exists := tt.envVars["AWS_REGION"]; !exists {
-				os.Unsetenv("AWS_REGION")
+				if err := os.Unsetenv("AWS_REGION"); err != nil {
+					t.Fatalf("Failed to unset env var AWS_REGION: %v", err)
+				}
 			}
 
 			got, err := ParseArgs(tt.args)

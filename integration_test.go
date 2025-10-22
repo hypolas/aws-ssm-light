@@ -102,14 +102,20 @@ func TestE2E_WithMockAWS(t *testing.T) {
 			originalEnv := make(map[string]string)
 			for key, value := range tt.envVars {
 				originalEnv[key] = os.Getenv(key)
-				os.Setenv(key, value)
+				if err := os.Setenv(key, value); err != nil {
+					t.Fatalf("Failed to set env var %s: %v", key, err)
+				}
 			}
 			defer func() {
 				for key, originalValue := range originalEnv {
 					if originalValue == "" {
-						os.Unsetenv(key)
+						if err := os.Unsetenv(key); err != nil {
+							t.Fatalf("Failed to unset env var %s: %v", key, err)
+						}
 					} else {
-						os.Setenv(key, originalValue)
+						if err := os.Setenv(key, originalValue); err != nil {
+							t.Fatalf("Failed to restore env var %s: %v", key, err)
+						}
 					}
 				}
 			}()
@@ -208,7 +214,7 @@ func BenchmarkFormatOutput(b *testing.B) {
 // TestConcurrentAccess tests concurrent access to secrets
 func TestConcurrentAccess(t *testing.T) {
 	const numGoroutines = 10
-	
+
 	mockClient := new(MockSecretsManagerClient)
 	mockResponse := &secretsmanager.GetSecretValueOutput{
 		SecretString: aws.String("concurrent-test-secret"),
