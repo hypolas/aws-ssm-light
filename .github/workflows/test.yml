@@ -75,7 +75,7 @@ jobs:
         go tool cover -func=coverage.out
 
     - name: Upload coverage artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: coverage-report
         path: |
@@ -100,7 +100,7 @@ jobs:
         go test -bench=. -benchmem -run=^$ ./... | tee benchmark.txt
 
     - name: Upload benchmark results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: benchmark-results
         path: benchmark.txt
@@ -144,7 +144,7 @@ jobs:
       continue-on-error: true
 
     - name: Upload security report
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: security-report
         path: gosec-report.json
